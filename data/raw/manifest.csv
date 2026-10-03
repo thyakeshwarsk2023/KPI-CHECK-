@@ -1,0 +1,7 @@
+ticker,year,form,filepath,url,download_date,file_size_bytes
+AAPL,2025,10-K,data\raw\AAPL_2025.htm,https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm,2026-10-03 22:50:00,1520331
+MSFT,2026,10-K,data\raw\MSFT_2026.htm,https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm,2026-10-03 22:50:07,8585624
+TSLA,2026,10-K,data\raw\TSLA_2026.htm,https://www.sec.gov/Archives/edgar/data/1318605/000162828026003952/tsla-20251231.htm,2026-10-03 22:50:11,2391652
+NVDA,2026,10-K,data\raw\NVDA_2026.htm,https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm,2026-10-03 22:50:14,1967939
+AMZN,2026,10-K,data\raw\AMZN_2026.htm,https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm,2026-10-03 22:50:19,1968465
+GOOGL,2026,10-K,data\raw\GOOGL_2026.htm,https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm,2026-10-03 22:50:22,2616622

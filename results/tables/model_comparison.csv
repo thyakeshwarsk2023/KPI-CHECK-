@@ -1,0 +1,5 @@
+model,accuracy,f1_micro,f1_macro,precision_micro,recall_micro,precision_macro,recall_macro
+Logistic Regression (Block A+B),93.33,93.33,92.8,93.33,93.33,92.8,92.8
+MLP Classifier (Block A+B),86.67,86.67,85.93,86.67,86.67,86.3,86.74
+Logistic Regression (Block A only),90.0,90.0,89.36,90.0,90.0,89.26,89.77
+Logistic Regression (Block B only),66.67,66.67,64.67,66.67,66.67,64.81,65.15

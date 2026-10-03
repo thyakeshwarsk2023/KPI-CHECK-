@@ -1,0 +1,22 @@
+[
+  {
+    "index": 0,
+    "category": "Correct Match (1)"
+  },
+  {
+    "index": 2,
+    "category": "Correct Match (2)"
+  },
+  {
+    "index": 1,
+    "category": "Correct No-Match (1)"
+  },
+  {
+    "index": 6,
+    "category": "Correct No-Match (2)"
+  },
+  {
+    "index": 10,
+    "category": "Misclassification / Edge Case"
+  }
+]
