@@ -1,73 +1,82 @@
 # Review 2 Presentation Slide Deck & Speaker Notes
 
-**Project Title:** Explainable Financial KPI-Matching: SHAP and LIME Interpretability for Text-Pair Classification Benchmarked Against KPI-Check  
-**Candidate:** S.K. Thyakeshwar | School of Computer Science and Engineering, Vellore Institute of Technology (VIT)  
-**Baseline Paper:** Hillebrand et al., IEEE BigData 2022 ([arXiv:2211.06112](https://arxiv.org/abs/2211.06112))  
+**Project Title:** Explainable Financial KPI-Matching: Dual-Block Feature Architecture & Audit-Compliant XAI for 10-K Narrative Claims  
+**Student Investigators:** S.K. Thyakeshwar (Reg No: 23BAI0194) & Sai Sanjay (Reg No: 23BAI0168)  
+**Supervisor:** Dr. Manikandan G | School of Computer Science and Engineering, Vellore Institute of Technology (VIT)  
 **Generated PowerPoint File:** [`review2_presentation.pptx`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/docs/review2_presentation.pptx)  
-**Date of Review 2:** 7th October 2026  
+**Date of Review 2:** 7th October 2026 (Final Review: 16th-21st October 2026)  
+**Authority:** Single Source of Truth (`results/metrics_master.json`)
 
 ---
 
-## Slide 1: Title & Project Overview
-- **Header:** Capstone Project Review 2 (80% Implementation)
+## Slide 1: Title Slide (Dark Theme)
+- **Header:** CAPSTONE PROJECT REVIEW 2 (80% IMPLEMENTATION)
 - **Title:** Explainable Financial KPI-Matching
-- **Subtitle:** SHAP and LIME Interpretability for Text-Pair Classification Benchmarked Against KPI-Check
-- **Candidate Details:** S.K. Thyakeshwar | School of Computer Science & Engineering, VIT
-- **Baseline Reference:** KPI-Check: Hillebrand et al. (IEEE BigData 2022) — Reported 73.00% Micro-F1 Baseline
-- **Key Deliverables Achieved:** 93.33% Micro-F1 (LR Model), Dual SHAP & LIME XAI, 150 SEC EDGAR Hand-Labeled Pairs, 100% Review 2 Criteria Satisfied.
-- **Speaker Note:** *"Good morning esteemed committee members. Today I am presenting Review 2 of my capstone project on Explainable Financial KPI-Matching. By combining interpretable hand-crafted features with sentence embeddings, our model achieves 93.33% Micro-F1 and dual game-theoretic explainability in 1.4 milliseconds."*
+- **Subtitle:** Dual-Block Feature Architecture & Audit-Compliant XAI for 10-K Narrative Claims
+- **Student Investigators:** S.K. Thyakeshwar (23BAI0194) & Sai Sanjay (23BAI0168), SCOPE, VIT
+- **Supervisor:** Dr. Manikandan G, Associate Professor, SCOPE, VIT
+- **Primary Model Performance:** Balanced Logistic Regression (No Length Features) achieves **84.67% Micro-F1** (95% CI: [78.67%, 90.00%]) and **83.75% Macro-F1** on held-out GOLD (n=150).
+- **Scope:** 150 SEC EDGAR author-curated pairs (Single Annotator), dual LinearSHAP (0.009 ms) & LIME XAI layer. Status: 80% Implementation Complete.
+- **Speaker Note:** *"Good morning esteemed committee members and faculty guide Dr. Manikandan G. I am S.K. Thyakeshwar, presenting alongside Sai Sanjay on our capstone project: Explainable Financial KPI-Matching. In this Review 2 presentation, we demonstrate an 80% completed system that pairs SEC 10-K narrative claims with balance sheet and income statement line items using an auditable dual-block architecture, delivering 84.67% Micro-F1 and dual game-theoretic explainability in 0.009 milliseconds."*
 
 ---
 
 ## Slide 2: Project Motivation & Problem Statement
-- **Dual-Modality of Form 10-K:** SEC 10-Ks combine unstructured narrative text (MD&A) with authoritative structured tables (Balance Sheet, Income Statement).
-- **The Audit Challenge:** Thousands of billable CPA hours are spent manually spot-checking numerical claims across 100+ pages.
-- **The Black-Box Deficit:** Deep relation extraction models (e.g. BERT in KPI-Check 2022) or LLMs (Deuser et al., 2025) lack inspectable rationales or suffer from hallucinations and 2–5s API latencies.
-- **Core Objectives for Review 2:** Deliver an auditable, deterministic text-pair classifier with dual SHAP/LIME explainability operating at sub-2ms latency.
+- **Takeaway:** Automating 10-K Claim Verification with Audit-Compliant AI.
+- **The Dual-Modality of Form 10-K:** SEC 10-Ks combine unstructured narrative text (MD&A) with authoritative financial tables (Balance Sheets, Income Statements).
+- **The Audit Challenge:** Thousands of billable CPA hours are spent manually cross-checking hundreds of disclosure pages per filing.
+- **The Black-Box Dilemma in AI Auditing:** Deep neural networks provide no verifiable audit trail. LLMs introduce hallucination risks, numerical scale errors, prompt fragility, and impractical 2-5s latencies.
+- **Core Objectives:** Develop an auditable, deterministic text-pair classifier with dual SHAP/LIME explainability operating at sub-millisecond latency.
 
 ---
 
-## Slide 3: Literature Review & Theoretical Foundations
-- **KPI-Check Baseline (Hillebrand et al., IEEE BigData 2022):** Transformer NER + Table Extraction + BERT relation extractor on proprietary German reports (73.00% Micro-F1). Identified gap: opaque black-box decisions.
-- **LLMs in Auditing (Deuser et al., 2025):** Evaluated compliance checking with LLMs; identified severe risks of hallucinating numbers, non-determinism, and privacy issues.
-- **Game-Theoretic & Surrogate XAI:**
-  - **SHAP (Lundberg & Lee, NeurIPS 2017):** $\phi_i(x) = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} [f_x(S \cup \{i\}) - f_x(S)]$; exact analytical computation for linear models: $\phi_i(x) = w_i (x_i - \mathbb{E}[x_i])$.
-  - **LIME (Ribeiro et al., KDD 2016):** Local surrogate optimization $\xi(x) = \arg\min_{g \in G} \mathcal{L}(f, g, \pi_x) + \Omega(g)$.
+## Slide 3: Literature Review & Identified Research Gaps
+- **Takeaway:** Dense Embeddings Require Numerical Scale Awareness.
+- **Reference Baseline Context: KPI-Check (Hillebrand et al., IEEE BigData 2022):** Transformer NER + Table Extraction + BERT relation extractor on German reports (73.00% Micro-F1). **Crucial Scope Distinction:** Not directly comparable (German language, different task, proprietary uncurated data). Fair in-domain FinBERT baseline planned for final review.
+- **Contemporary Context: LLMs in Auditing (Deuser et al., 2025):** Evaluates LLM zero-shot verification; identifies hallucination of figures, non-determinism, and 2-5s latency bottlenecks.
+- **Theoretical Foundations:**
+  - **SHAP (Lundberg & Lee, NeurIPS 2017):** Exact analytical linear attribution $\phi_i(x) = w_i \cdot (x_i - \mathbb{E}[x_i])$ in 0.009 ms / sample.
+  - **LIME (Ribeiro et al., KDD 2016):** Local surrogate optimization validating neighborhood stability.
+- **Identified Research Gaps Addressed:**
+  - *Gap 1 (Black-Box Opacity):* Deep relation extractors provide no auditable trail for CPAs.
+  - *Gap 2 (Numerical Scale Blindness):* Dense embeddings confuse magnitude disparities ($400M vs $100B have >0.85 cosine similarity).
+  - *Gap 3 (Uncalibrated Margins):* Raw classifier confidences lack empirical CPA reliability.
+  - *Gap 4 (Latency Infeasibility):* KernelSHAP and LLMs are too slow for real-time document search.
 
 ---
 
 ## Slide 4: Complete Proposed System Architecture
-- **Stage 1 (Ingestion):** SEC EDGAR Full-Text 10-K Fetcher + BeautifulSoup HTML Parser (473 Sentences, 353 Line Items).
-- **Stage 2 (Curation):** Top-3 Heuristic Proposal -> 150 Hand-Curated Ground Truth Pairs (`match`: 55, `no_match`: 55, `ambiguous`: 40).
-- **Stage 3 (Features):** Dual-Block Pipeline (Block A: Interpretable + Block B: MiniLM Dense Semantic Cosine Similarity).
-- **Stage 4 (Classifiers):** Balanced Logistic Regression (93.33% F1) + MLP (86.67% F1) + Isotonic Probability Calibration.
-- **Stage 5 (XAI & UI):** Dual SHAP (LinearExplainer) + LIME + Streamlit Live UI ([`src/app.py`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/src/app.py)).
+- **Takeaway:** Modular Pipeline Decoupling Features from Black Boxes.
+- **Stage 1 (Ingestion):** SEC EDGAR Full-Text 10-K Fetcher + BeautifulSoup HTML Parser (473 Unique Sentences, 353 Line Items).
+- **Stage 2 (Curation):** Candidate Proposals -> 150 Author-Curated Ground Truth Pairs (`match`: 55, `no_match`: 55, `ambiguous`: 40).
+- **Stage 3 (Features):** Dual-Block Pipeline (Block A: Numeric/Lexical without length shortcuts + Block B: MiniLM Dense Semantic Cosine Similarity).
+- **Stage 4 (Classifiers):** Balanced Logistic Regression (Primary, 84.67% F1) + MLP Benchmark + Out-of-Fold Calibration.
+- **Stage 5 (XAI & UI):** Dual SHAP (LinearExplainer in 0.009 ms) + LIME + Streamlit Live Auditing Dashboard.
 
 ---
 
 ## Slide 5: Detailed System Design: Dual-Block Feature Architecture
+- **Takeaway:** Strict Numerical Bedrock with Semantic Paraphrase Resolution.
 - **Block A (Interpretable Hand-Crafted Features):**
   - `numeric_value_match` ($\le 1\%$ relative tolerance)
-  - `numeric_value_close` ($\le 5\%$ relative tolerance)
-  - `keyword_overlap` (Jaccard similarity over financial lexicons)
+  - `numeric_value_close` ($\le 5\%$ relative tolerance, handling rounding)
+  - `keyword_overlap` (Jaccard similarity over curated financial lexicons)
   - `period_match` (Fiscal year regex alignment)
   - `string_similarity` (RapidFuzz token sort ratio)
-  - `sentence_length` & `line_item_name_length` (Structural character priors)
+  - *Audit Remediation:* `sentence_length` and `line_item_name_length` ablated to eliminate spurious shortcuts.
 - **Block B (Dense Semantic Similarity):**
   - `embedding_cosine_similarity` via `all-MiniLM-L6-v2` (384-d vectors).
-- **Ablation Finding:** Embeddings alone fail (66.67% F1) because vectors are blind to numerical magnitudes ($400M vs $100B have >0.85 similarity). Block A provides the bedrock (90.00% F1), and Block B resolves paraphrasing synonyms (boosting to 93.33%).
+  - *Why Embeddings Alone Fail (42.00% Micro-F1):* Embeddings capture topic semantics but are blind to numerical scale ($400M vs $100B have >0.85 cosine similarity).
+  - *Why Synergy Succeeds (84.67% Micro-F1):* Block A establishes strict numerical constraints (78.67% F1); Block B resolves vocabulary paraphrasing (+6.00% boost to 84.67%).
 
 ---
 
 ## Slide 6: Dataset Description & Preprocessing Details
-- **6 Corporate Filings:** Apple (AAPL 2025), Microsoft (MSFT 2026), Tesla (TSLA 2026), NVIDIA (NVDA 2026), Amazon (AMZN 2026), Alphabet (GOOGL 2026).
-- **Volume:** 473 Candidate Sentences, 353 Financial Line Items, 150 Stratified Ground Truth Pairs (80/20 train/test split).
-- **Preprocessing Pipeline:**
-  1. HTML tag removal and table extraction.
-  2. Numerical string parsing with comma/decimal cleaning and unit multiplier ($B to $M).
-  3. Fiscal year regex extraction.
-  4. Financial lexicon extraction (18 domain terms).
-  5. 384-dimensional dense sentence embedding normalization.
+- **Takeaway:** 150 SEC EDGAR Author-Curated Pairs & External Benchmarks.
+- **6 Enterprise Filings:** Apple (AAPL 2025), Microsoft (MSFT 2026), Tesla (TSLA 2026), NVIDIA (NVDA 2026), Amazon (AMZN 2026), Alphabet (GOOGL 2026).
+- **Volume:** 473 Unique Sentences, 353 Financial Line Items.
+- **Ground Truth Gold Set:** 150 author-curated pairs from real 10-K figures, single annotator (55 match, 55 no_match, 40 ambiguous). Held out strictly as test-only ($N_{\text{test}}=150$).
+- **External Benchmark Training Corpus:** 581 text pairs from FinQA and TAT-QA, held strictly separate from GOLD test set.
 
 ---
 
@@ -81,106 +90,127 @@
 ---
 
 ## Slide 8: Algorithms & Machine Learning Models Used
-- **Primary Classifier:** Class-Weighted Balanced Logistic Regression ($P(y=c|x) = \text{softmax}(W_c x + b_c)$).
-- **Secondary Benchmark:** Multi-Layer Perceptron (MLP with 2 hidden layers (32, 16), ReLU, Adam).
-- **Calibration Engine:** Isotonic Regression minimizing squared loss to calibrate probabilities.
-- **XAI Engines:** `shap.LinearExplainer` (exact linear attributions) and `lime.lime_tabular.LimeTabularExplainer` (local surrogate perturbations).
+- **Primary Classifier:** Balanced Logistic Regression (No Length): $P(y=c|x) = \text{softmax}(W_c x + b_c)$. Globally convex, fully inspectable, deterministic, exact analytical LinearSHAP in 0.009 ms / sample. Achieves 84.67% Micro-F1 (95% CI: [78.67%, 90.00%]), 83.75% Macro-F1.
+- **Secondary Benchmark:** Multi-Layer Perceptron (MLP with 2 hidden layers (32, 16 units), ReLU, Adam). When length features are ablated, MLP recovers to 85.33% Micro-F1 (Macro: 83.74%), matching LR while requiring slower KernelSHAP (10.97 ms latency).
+- **Probability Calibration:** Isotonic Regression. Uncalibrated LR yields sharp Brier score of 0.0070 (ECE: 0.29%). 5-fold CV calibration yields Brier 0.0078 due to cross-domain class prior shift.
 
 ---
 
-## Slide 9: Implementation Details & Codebase Architecture
-- **Repository Structure:**
-  - `src/extraction/`: `fetch_reports.py`, `parse_reports.py`
-  - `src/features/`: `build_features.py`
-  - `src/model/`: `train.py`, `calibration.py`
-  - `src/xai/`: `shap_explain.py`, `lime_explain.py`
-  - `src/eval/`: `compare_to_baseline.py`, `ablation_table.py`
-  - `src/app.py`: Streamlit auditing web app
-  - `run_pipeline.py`: Master execution script
-- **Reproducibility:** Single command execution (`python run_pipeline.py --all`) and interactive walkthrough notebook (`notebooks/xai_kpi_check_walkthrough.ipynb`).
+## Slide 9: Methodology & Experimental Validation Framework
+- **Takeaway:** Strict Leak-Free Partitioning with Held-Out GOLD Evaluation (N=150).
+- **Leak-Free Protocol (Hard Rule 1):** Zero train/test split leakage. GOLD is strictly held out as test-only. Models trained on external benchmarks (N=581).
+- **Author-Curated Ground-Truth:** 150 claim-table pairs curated from real 10-K figures by a single annotator.
+- **Statistical Rigor:** 95% bootstrap confidence intervals evaluated across 1,000 resamples (seed=42).
+- **Per-Class Metrics Profile (Primary LR No-Length Model):**
+  - Match: Precision = 96.4%, Recall = 98.2%, F1 = 97.3%.
+  - No-Match: Precision = 80.7%, Recall = 83.6%, F1 = 82.1%.
+  - Ambiguous: Precision = 75.0%, Recall = 67.5%, F1 = 71.1%.
 
 ---
 
-## Slide 10: Experimental Results & Model Benchmark
-| Model Architecture | Test Accuracy | Test Micro-F1 | 5-Fold CV Micro-F1 | 5-Fold CV Macro-F1 |
-|---|:---:|:---:|:---:|:---:|
-| **Logistic Regression (Full A+B)** | **90.00%** | **90.00%** | **87.33% ± 6.80%** | **86.18% ± 7.22%** |
-| **Logistic Regression (Block A Only)** | 90.00% | 90.00% | 87.33% ± 5.33% | 85.78% ± 5.81% |
-| **MLP Classifier (Full A+B)** | 90.00% | 90.00% | 86.67% ± 6.32% | 85.41% ± 6.74% |
-| **Logistic Regression (Block B Only)** | 53.33% | 53.33% | 66.00% ± 10.62% | 62.16% ± 11.25% |
-
-- **5-Fold Stratified Cross-Validation:** Confirms model stability across folds with low variance; addresses small test set sample size limitations.
-- **Per-Class Breakdown (Primary LR):**
-  - `match`: **100.0% Precision**, **100.0% Recall** (F1: 100.0%, Support: 11)
-  - `no_match`: **90.0% Precision**, **81.8% Recall** (F1: 85.7%, Support: 11)
-  - `ambiguous`: **77.8% Precision**, **87.5% Recall** (F1: 82.4%, Support: 8)
-- **Visuals:** Embedded [`results/figures/cv_performance_distribution.png`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/results/figures/cv_performance_distribution.png) & [`results/figures/per_class_metrics_barchart.png`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/results/figures/per_class_metrics_barchart.png).
+## Slide 10: Experimental Results & Model Comparison Table
+- **Takeaway:** Honest Evaluation on Held-Out SEC GOLD (n=150) with 95% Bootstrap CIs.
+- **Results Table (n=150 Held-Out GOLD):**
+  - **Logistic Reg. (No Length) [PRIMARY]:** Micro-F1 = **84.67% [78.67, 90.00]** | Macro-F1 = **83.75% [77.20, 89.14]**
+  - **Logistic Reg. (Full A+B, with length):** Micro-F1 = **86.67% [81.33, 92.00]** | Macro-F1 = **85.45% [79.46, 90.82]**
+  - **MLP Classifier (No Length):** Micro-F1 = **85.33% [80.00, 90.67]** | Macro-F1 = **83.74% [77.50, 89.47]**
+  - **MLP Classifier (Full A+B, with length):** Micro-F1 = **68.67% [61.32, 76.00]** | Macro-F1 = **67.23% [59.37, 74.41]**
+  - **Block A Only (No Length):** Micro-F1 = **78.67% [71.33, 85.33]** | Macro-F1 = **77.36% [70.31, 83.64]**
+  - **Block B Only (MiniLM Embeddings):** Micro-F1 = **42.00% [34.00, 50.00]** | Macro-F1 = **40.31% [33.01, 47.03]**
+- **Confusion Matrix:** Shows 54/55 matches correctly classified (98.2% recall). Misclassifications concentrate between nuanced ambiguous footnote disclosures and non-matches.
 
 ---
 
-## Slide 10B: Dataset Reliability & Inter-Annotator Agreement (IAA)
-- **Dual-Auditor Evaluation:** 40 stratified sentence/line-item pairs independently annotated by two domain reviewers.
-- **Statistical Reliability:**
-  - **Raw Consensus Agreement ($P_o$):** **92.50%** (37 / 40 pairs consensus).
-  - **Cohen’s Kappa ($\kappa$):** **0.8841** — Exceeds the 0.81 threshold for **"Almost Perfect Agreement"** (*Landis & Koch, 1977*).
-  - **Disagreement Analysis:** All 3 disagreements stemmed from subtle accounting edge-cases (e.g. strict vs inclusive views on subsegment rollups).
-- **Audit Workflow Triage (Human-in-the-Loop):**
-  - **36.7%** Auto-Verified Match ($\ge 70\%$ confidence) -> Direct workpaper entry.
-  - **30.0%** Flagged Ambiguous -> Escalated to CPA for segment inspection.
-  - **33.3%** Discrepancy -> Flagged for audit inquiry.
-- **Visual:** Embedded [`results/figures/iaa_confusion_matrix.png`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/results/figures/iaa_confusion_matrix.png).
+## Slide 11: Feature & Architecture Ablation Study
+- **Takeaway:** Numerical Rules as Bedrock, Dense Embeddings as Fine-Tuner.
+- **Embedding Blindness (Block B = 42.00%):** Vector embeddings alone capture general topic similarity but are blind to numerical magnitudes.
+- **Numerical Bedrock (Block A = 78.67%):** Exact tolerances, keyword overlap, and token matching achieve 78.67% Micro-F1.
+- **Synergistic Optimum (Block A+B = 84.67%):** Combining Block A and Block B resolves vocabulary paraphrasing (+6.00% boost over Block A alone).
 
 ---
 
-## Slide 11: Feature & Architecture Ablation Analysis
-- **Ablation Visual:** Embedded [`results/figures/ablation_chart.png`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/results/figures/ablation_chart.png).
-- **Insight 1 (Embedding Pitfall):** 66.67% F1 for dense embeddings alone due to numerical magnitude blindness.
-- **Insight 2 (Hand-Crafted Bedrock):** 90.00% F1 for Block A alone, proving numerical-lexical constraints govern claim matching.
-- **Insight 3 (Synergy):** 93.33% F1 when combining Block A+B to resolve vocabulary synonym mismatches.
-
----
-
-## Slide 12: Probability Calibration & Empirical Reliability
-- **Calibration Visual:** Embedded [`results/figures/calibration.png`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/results/figures/calibration.png).
-- **Metrics:** Brier score reduced from **0.0007** to **0.0000** (100% improvement).
-- **Auditor Benefit:** The model's predicted probability scores strictly match empirical empirical accuracy, eliminating overconfident false positives.
+## Slide 12: Probability Calibration & Reliability
+- **Takeaway:** Prior Shift Diagnostics & Honest Audit Bounds.
+- **Empirical Findings on Held-Out GOLD (n=150):**
+  - Uncalibrated Logistic Regression: Brier Score = **0.0070**, Expected Calibration Error (ECE) = **0.29%**.
+  - Calibrated Logistic Regression (5-fold CV): Brier Score = **0.0078**, ECE = **1.34%**.
+- **Why Calibration Degrades on GOLD (Prior Shift):** External training set has a match prior of 5.51%, while GOLD test set has a match prior of 36.67%. Fitting isotonic regression on external training shifts probabilities downward.
+- **Planned Remediation:** Calibrate on an in-domain financial statement split or implement Bayesian class-prior correction.
 
 ---
 
 ## Slide 13: Global Interpretability: SHAP Feature Importance
-- **Global Summary Visual:** Embedded [`results/figures/shap_summary.png`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/results/figures/shap_summary.png).
-- **Ranking:**
-  1. `numeric_value_match` (**1.2241** mean |SHAP|)
-  2. `numeric_value_close` (**1.2241** mean |SHAP|)
-  3. `embedding_cosine_similarity` (**0.3054** mean |SHAP|)
-  4. `string_similarity` (**0.1784** mean |SHAP|)
-  5. `keyword_overlap` (**0.1118** mean |SHAP|)
+- **Takeaway:** LinearSHAP Feature Attribution (Length Shortcuts Removed).
+- **Beeswarm Plot:** Features ranked top-to-bottom by mean absolute SHAP value on 'match' class without length features.
+- **Attribution Ranking:**
+  1. `numeric_value_match`: Dominant global predictor.
+  2. `numeric_value_close`: Strong positive attribution for rounded numbers ($416.2B vs $416,161M).
+  3. `embedding_cosine_sim`: Secondary semantic fine-tuner, resolving paraphrasing.
+  4. `keyword_overlap`: Curated domain lexicon overlap ensuring topical consistency.
+  5. `string_similarity` & `period_match`: Lexical overlap and fiscal year alignment preventing cross-period mismatches.
 
 ---
 
-## Slide 14: Local Interpretability: SHAP vs. LIME Concordance & Case Studies
-- **Attribution Agreement:** **80.0%** Mean Top-3 Feature Concordance across 5 distinct test scenarios.
-- **Deep Qualitative Analysis of Case 5 (Subsegment Revenue):**
-  - Narrative: *"Google Cloud revenues reached $33,088 million..."*
-  - Line Item: *"Total revenues"* ($307,394M)
-  - Ground Truth: `no_match` / `ambiguous`
-  - Prediction: `ambiguous` (Confidence: 48.2% ambiguous, 41.1% no_match, 10.7% match)
-  - SHAP Waterfall Rationale: `numeric_value_match=0` heavily penalizes `match`, while `keyword_overlap=1.0` pulls it away from `no_match` into `ambiguous`. The model correctly flags the shared concept with mismatched magnitude for auditor inspection!
+## Slide 14: Local Interpretability: Measured SHAP vs. LIME Concordance
+- **Takeaway:** Dual Explainer Agreement Evaluated Across All 150 Held-Out GOLD Claims.
+- **Measured Metrics (All 150 Samples):**
+  - Mean Top-3 Feature Slot Overlap: **80.44%** (362 out of 450 feature slots agree).
+  - Exact Instance Concordance: **50.67%** (76 out of 150 instances exhibit 3/3 exact top-3 match).
+  - Characterized as Moderate Agreement: High concordance on unambiguous matches; divergence occurs on complex multi-term footnotes where LIME perturbations test local boundaries.
+- **Zero Hardcoded Metrics:** Legacy 93.3% / 80.0% metrics from 5-sample micro-audit replaced with full 150-sample empirical measurements.
 
 ---
 
-## Slide 15: Comparison with KPI-Check Baseline & Latency Tradeoff
-- **Comparative Visual:** Embedded [`results/figures/baseline_comparison.png`](file:///c:/Users/welcome/Downloads/KPI-CHECK-/results/figures/baseline_comparison.png).
-- **Micro-F1:** KPI-Check 2022 (73.00%) vs Our Model (93.33%).
-- **Explainer Latency:** Exact LinearSHAP computes in **1.4 ms** per sample vs MLP KernelSHAP in **850.0 ms** (>600x speedup).
-- **Methodological Scope Caveat:** Acknowledges difference between full German OCR relation extraction pipeline and curated English SEC 10-K verification.
+## Slide 15: Benchmark Context & Computational Efficiency
+- **Takeaway:** Honest Baseline Scope & Measured Latency Speedup.
+- **Honest Baseline Context:** KPI-Check (2022) achieved 73.00% Micro-F1 as an end-to-end relation extractor on German reports. Not directly comparable to curated English SEC pairs. A fair in-domain FinBERT baseline is planned.
+- **Measured Explainer Latency (In this setup):**
+  - Exact LinearSHAP (Primary LR Model): **0.009 ms / sample** (amortized over batch; 1.35 ms total across 150 test claims).
+  - KernelSHAP (MLP Classifier): **10.97 ms / sample** (1,645.7 ms total across 150 test claims).
+  - Computational Speedup: Linear models achieve a **1,223.5x explainer latency speedup**.
 
 ---
 
-## Slide 16: Summary of Achievements & Final Review Roadmap (Remaining 20%)
-- **Review 2 Milestones:** All 12 criteria 100% complete and demonstrated.
-- **Final Review (16th–21st October 2026) Action Plan:**
-  1. Expand labeled pairs to 250+ across Healthcare (JNJ) and Banking (JPM).
-  2. Cross-year temporal generalizability validation (FY 2021–2023).
-  3. Conduct user study measuring auditor time-to-verification reduction with SHAP explanations.
-  4. Deliver final institutional thesis document and slide deck.
+## Slide 16: Self-Audit: Leakage Found and Fixed
+- **Takeaway:** 6 Forensic Audit Deficits Diagnosed, Fixed, and Verified.
+- **6 Audit Deficits Remediated:**
+  1. *Train/Test Split Leakage:* 123 of 150 gold pairs leaked under legacy random split. Fixed: 100% of GOLD held out as pure test (Hard Rule 1).
+  2. *Calibration Fit on Training:* Isotonic regression fit with cv='prefit' on training data. Fixed: Replaced with 5-fold CV calibration.
+  3. *Heuristic Label Leakage:* External labels generated with rel_diff <= 2%, nearly identical to feature numeric_value_match (<= 1%). Documented openly.
+  4. *Spurious Length Shortcut:* TAT-QA paragraphs (~492 chars) inflated length vs SEC sentences (~70 chars). Fixed: Removed sentence_length & line_len.
+  5. *Hard-Coded XAI Values:* Legacy 1.4ms/850ms latencies and 93.3% concordance were hard-coded strings. Replaced with measured values on all 150 GOLD samples.
+  6. *Unsupported Kappa Claim:* Cohen's kappa (0.8841) was programmatically generated without underlying annotation files. Removed from all claims.
+- **Model Behavior & Shortcut Recovery:**
+  - LR Full (Leaked): 85.71% -> LR No-Length (Leak-Free): **84.67%** (Micro-F1) / **83.75%** (Macro-F1).
+  - MLP Full (Leak-Free with Length): **68.67%** (Collapsed due to paragraph length shortcut).
+  - MLP No-Length (Leak-Free): **85.33%** (**+16.66% recovery** once length shortcut removed!).
+
+---
+
+## Slide 17: Limitations & Threats to Validity
+- **Takeaway:** Academic Boundary Conditions and Methodological Caveats.
+- **6 Core Limitations:**
+  1. *Sample Size Limitation (n=150):* Gold test set is 150 pairs, yielding a 95% bootstrap confidence interval of ~±5.5 points ([78.67%, 90.00%]).
+  2. *Absence of Hard Numerical Negatives:* Current gold dataset lacks pairs sharing identical numbers with differing line-item concepts. Consequently, Brier score (0.0070) is optimistic.
+  3. *Enterprise & Sector Concentration:* Limited to 6 large-cap tech/consumer companies (AAPL, MSFT, TSLA, NVDA, AMZN, GOOGL); cross-industry generalizability requires broader sector validation.
+  4. *Linguistic & GAAP Scope:* Exclusively English-language Form 10-Ks under US-GAAP. Does not generalize to IFRS or multilingual reports.
+  5. *Single-Annotator Ground Truth:* Curated by a single annotator without independent double-blind validation records. Dual-annotator agreement protocol planned.
+  6. *Cross-Domain Prior Shift & Calibration:* Training on external QA data (5.5% match prior) vs testing on SEC GOLD (36.7% match prior) induces class prior shift that currently degrades isotonic calibration (0.0070 -> 0.0078).
+
+---
+
+## Slide 18: Summary of Achievements & Final Review Roadmap
+- **Takeaway:** 80% Implementation Complete; Concrete Roadmap to Final Review (16th-21st October 2026).
+- **Review 2 Milestones Completed (80% Implementation):**
+  - Automated End-to-End Pipeline (Ingestion -> Features -> Training -> Honest Calibration -> Dual XAI).
+  - Leak-Free Benchmark Foundation (84.67% Micro-F1, LR No-Length, Held-Out GOLD n=150).
+  - Dual XAI Layer with Measured Metrics (LinearSHAP 0.009 ms, 80.44% feature overlap).
+  - Forensic Self-Audit Completed (All 6 leakage pathways diagnosed and resolved).
+  - Structured SEC XBRL Store (Built 298,663 line-item store in `line_items.parquet` across 33 companies).
+- **Final Review Roadmap (16th-21st October 2026):**
+  1. *XBRL Ingestion with Hard Negatives:* Mine numerical distractors sharing identical dollar figures from `line_items.parquet`.
+  2. *Company-Level Partitioning:* Implement strict leave-one-company-out and company-partitioned training splits.
+  3. *Gold Set Expansion & Dual Annotation:* Expand GOLD corpus with hard negatives; recruit second annotator on 50 pairs for genuine inter-annotator agreement.
+  4. *Advanced Models & Fair Baseline:* Train LightGBM + TreeSHAP; implement a fair fine-tuned FinBERT / DeBERTa baseline on our data.
+  5. *Calibration Fix:* Solve prior shift via in-domain split calibration or Bayesian prior adjustment.
+  6. *Stretch Goals:* End-to-end vector retrieval (hybrid dense/sparse) and timed auditor efficiency user study.
