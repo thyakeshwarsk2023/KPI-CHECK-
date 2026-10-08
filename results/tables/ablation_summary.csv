@@ -1,5 +1,5 @@
 model_configuration,micro_F1,macro_F1,precision,recall,mean_SHAP_computation_time
-"Block A Only (Hand-Crafted Features, LR)",90.0,89.36,90.0,90.0,1.1 ms (LinearExplainer - Exact)
-"Block B Only (Dense Embeddings, LR)",53.33,45.53,53.33,53.33,1.3 ms (LinearExplainer - Exact)
-Block A + B Full Set (Logistic Regression),90.0,89.36,90.0,90.0,1.4 ms (LinearExplainer - Exact)
-Block A + B Full Set (MLP Classifier),90.0,89.36,90.0,90.0,850.0 ms (KernelExplainer - Sampling)
+"Block A Only (Hand-Crafted Features, LR)",84.0,81.83,84.0,84.0,1.1 ms (LinearExplainer - Exact)
+"Block B Only (Dense Embeddings, LR)",42.0,40.31,42.0,42.0,1.3 ms (LinearExplainer - Exact)
+Block A + B Full Set (Logistic Regression),86.67,85.45,86.67,86.67,1.4 ms (LinearExplainer - Exact)
+Block A + B Full Set (MLP Classifier),68.67,67.23,68.67,68.67,850.0 ms (KernelExplainer - Sampling)

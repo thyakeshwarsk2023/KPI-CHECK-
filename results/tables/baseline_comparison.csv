@@ -1,5 +1,5 @@
 dimension,KPI-Check_2022_paper,this_project
-Micro-F1 Performance,73.00%,90.00%
+Micro-F1 Performance,73.00%,85.71%
 Primary Methodology,"BERT-based NER + relation extraction, text-pair classification","Interpretable hand-crafted + dense embeddings, Logistic Regression"
 Dataset Scale & Provenance,"Real-world German financial reports (proprietary, major auditing firm)",150 hand-labeled pairs across 6 public SEC 10-K filings
 Language & Standard,German (HGB / IFRS commercial filings),English (US-GAAP SEC Form 10-K filings)

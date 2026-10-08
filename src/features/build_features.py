@@ -163,14 +163,17 @@ def build_feature_table(df_labeled: pd.DataFrame):
 
 
 def main():
-    if not INPUT_LABELED_CSV.exists():
-        logger.error(f"Labeled file not found: {INPUT_LABELED_CSV}. Need labeled dataset to build features.")
+    combined_csv = Path("data/labeled/pairs_labeled_combined.csv")
+    input_file = combined_csv if combined_csv.exists() else INPUT_LABELED_CSV
+
+    if not input_file.exists():
+        logger.error(f"Labeled file not found: {input_file}. Need labeled dataset to build features.")
         return
 
-    df_labeled = pd.read_csv(INPUT_LABELED_CSV)
+    df_labeled = pd.read_csv(input_file)
     # Filter out empty labels if any
     df_labeled = df_labeled[df_labeled["label"].str.strip().ne("")].copy()
-    logger.info(f"Loaded {len(df_labeled)} labeled rows from {INPUT_LABELED_CSV}")
+    logger.info(f"Loaded {len(df_labeled)} labeled rows from {input_file}")
 
     OUTPUT_FEATURES_CSV.parent.mkdir(parents=True, exist_ok=True)
     df_features, raw_embs = build_feature_table(df_labeled)

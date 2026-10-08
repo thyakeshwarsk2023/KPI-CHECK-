@@ -67,8 +67,8 @@ def main():
     y_test_binary = (y_test == target_class).astype(int)
     brier_uncal = brier_score_loss(y_test_binary, probs_uncal)
 
-    # 2. Fit Isotonic Calibrated Classifier
-    calibrated_clf = CalibratedClassifierCV(pipeline, method="isotonic", cv="prefit")
+    # 2. Fit Isotonic Calibrated Classifier (5-Fold CV on training set to prevent training leakage)
+    calibrated_clf = CalibratedClassifierCV(pipeline, method="isotonic", cv=5)
     calibrated_clf.fit(X_train, y_train)
     probs_cal = calibrated_clf.predict_proba(X_test)[:, target_idx]
     brier_cal = brier_score_loss(y_test_binary, probs_cal)

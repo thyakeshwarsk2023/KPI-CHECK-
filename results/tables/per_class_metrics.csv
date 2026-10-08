@@ -1,4 +1,4 @@
 class,precision,recall,f1_score,support
-ambiguous,77.78,87.5,82.35,8
-match,100.0,100.0,100.0,11
-no_match,90.0,81.82,85.71,11
+ambiguous,76.32,72.5,74.36,40
+match,98.21,100.0,99.1,55
+no_match,82.14,83.64,82.88,55

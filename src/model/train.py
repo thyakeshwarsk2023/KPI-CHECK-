@@ -111,10 +111,29 @@ def main():
     classes = sorted(df["label"].unique().tolist())
     logger.info(f"Target classes ({len(classes)}): {classes}")
 
-    # Stratified 80/20 train/test split with fixed random_state
-    train_df, test_df = train_test_split(
-        df, test_size=0.20, random_state=42, stratify=df["label"]
-    )
+    import argparse
+    parser = argparse.ArgumentParser(description="Train text-pair matching classifiers.")
+    parser.add_argument("--split", choices=["leak_free", "legacy"], default="leak_free",
+                        help="Data split protocol. 'leak_free' (default) holds out 150 GOLD pairs as test-only (Hard Rule 1). 'legacy' reproduces the flawed 80/20 random split.")
+    args = parser.parse_args()
+
+    # Split dataset
+    comb_labeled = Path("data/labeled/pairs_labeled_combined.csv")
+    if args.split == "leak_free" and comb_labeled.exists():
+        df_comb = pd.read_csv(comb_labeled)
+        df["source_dataset"] = df_comb["source_dataset"]
+        train_df = df[df["source_dataset"].isin(["TAT-QA (NExT Research)", "FinQA (Columbia/JPM)"])].copy().reset_index(drop=True)
+        test_df = df[df["source_dataset"] == "SEC EDGAR 10-K (Primary)"].copy().reset_index(drop=True)
+        logger.info(f"Leak-Free Split Enforced (Hard Rule 1): {len(train_df)} external train samples, {len(test_df)} GOLD test samples (0 overlap).")
+    else:
+        if args.split == "leak_free":
+            logger.warning("Combined dataset not found. Falling back to random stratified split.")
+        else:
+            logger.warning("WARNING: Running in 'legacy' mode with known data leakage (GOLD samples present in training set).")
+        train_df, test_df = train_test_split(
+            df, test_size=0.20, random_state=42, stratify=df["label"]
+        )
+
     train_df.to_csv(SPLITS_DIR / "train_split.csv", index=False)
     test_df.to_csv(SPLITS_DIR / "test_split.csv", index=False)
     logger.info(f"Split data: {len(train_df)} train, {len(test_df)} test. Saved splits to data/processed/")
