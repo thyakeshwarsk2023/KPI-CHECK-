@@ -1,9 +1,9 @@
 feature,mean_abs_shap
-numeric_value_match,1.2241
-numeric_value_close,1.2241
-embedding_cosine_similarity,0.3054
-string_similarity,0.1784
-keyword_overlap,0.1118
-sentence_length,0.0763
-line_item_name_length,0.0468
+numeric_value_match,1.2042
+numeric_value_close,1.2042
+embedding_cosine_similarity,0.501
+keyword_overlap,0.1878
+string_similarity,0.0743
+sentence_length,0.0715
+line_item_name_length,0.0628
 period_match,0.0

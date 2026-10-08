@@ -1,0 +1,5 @@
+triage_tier,count,percentage,action
+Auto-Verified Match (High Confidence >=70%),11,36.7%,Direct insertion to audit workpaper
+Flagged Ambiguous (Borderline / Accounting Nuance),9,30.0%,Escalate to CPA for segment / non-GAAP inspection
+Discrepancy (Confirmed No-Match),10,33.3%,Flag numerical / semantic inconsistency in filing
+Low Confidence (<70% Margin),3,10.0%,Route for secondary verification

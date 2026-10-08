@@ -44,7 +44,10 @@ STAGES = {
     ],
     "eval": [
         "src/eval/compare_to_baseline.py",
-        "src/eval/ablation_table.py"
+        "src/eval/ablation_table.py",
+        "src/eval/cross_validation.py",
+        "src/eval/inter_annotator_agreement.py",
+        "src/eval/per_class_metrics.py"
     ]
 }
 

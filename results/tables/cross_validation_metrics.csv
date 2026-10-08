@@ -1,0 +1,5 @@
+model,mean_f1_micro,std_f1_micro,f1_micro_display,mean_f1_macro,std_f1_macro,f1_macro_display,mean_accuracy,std_accuracy,mean_precision_macro,mean_recall_macro
+Logistic Regression (Block A+B),87.33,6.8,87.33 +/- 6.80%,86.18,7.22,86.18 +/- 7.22%,87.33,6.8,87.41,86.44
+Logistic Regression (Block A only),87.33,5.33,87.33 +/- 5.33%,85.78,5.81,85.78 +/- 5.81%,87.33,5.33,87.72,85.53
+Logistic Regression (Block B only),66.0,10.62,66.00 +/- 10.62%,62.16,11.25,62.16 +/- 11.25%,66.0,10.62,64.53,63.18
+MLP Classifier (Block A+B),86.67,6.32,86.67 +/- 6.32%,85.41,6.74,85.41 +/- 6.74%,86.67,6.32,86.12,85.15

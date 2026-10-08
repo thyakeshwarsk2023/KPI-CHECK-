@@ -1,0 +1,7 @@
+metric,value
+Sample Size (Evaluated Pairs),40
+Consensus Pair Count,37 / 40
+Raw Percentage Agreement (Po),92.50%
+Cohen's Kappa (kappa),0.8841
+Benchmark Reliability Tier,"Almost Perfect Agreement (Landis & Koch, 1977)"
+Disagreement Frequency,3 pairs (Borderline accounting edge-cases)

@@ -26,25 +26,24 @@ Outputs:
 import re
 import csv
 import logging
+import sys
 from pathlib import Path
 import numpy as np
 import pandas as pd
 from rapidfuzz import fuzz
 
+# Ensure repo root is on sys.path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.constants import (
+    FINANCIAL_KEYWORDS,
+    INPUT_LABELED_CSV,
+    OUTPUT_FEATURES_CSV,
+    OUTPUT_EMBEDDINGS_NPY
+)
+from src.features.embed_helper import compute_batch_similarities
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
-
-INPUT_LABELED_CSV = Path("data/labeled/pairs_labeled.csv")
-OUTPUT_FEATURES_CSV = Path("data/processed/features.csv")
-OUTPUT_EMBEDDINGS_NPY = Path("data/processed/raw_embeddings.npy")
-
-FINANCIAL_KEYWORDS = [
-    "revenue", "net income", "operating income", "gross profit", "cost of sales",
-    "gross margin", "operating margin", "ebitda", "operating expenses",
-    "total assets", "cash and cash equivalents", "marketable securities",
-    "free cash flow", "capital expenditures", "earnings per share", "diluted",
-    "sales", "debt", "interest expense", "tax expense", "retained earnings"
-]
 
 NUM_EXTRACT_RE = re.compile(r"[-+]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?")
 YEAR_PATTERN = re.compile(r"\b(20\d\d)\b")
@@ -126,56 +125,10 @@ def compute_block_a_features(sentence: str, line_name: str, line_val: float, per
 
 def compute_block_b_embeddings(sentences: list, line_names: list):
     """
-    Computes dense embedding cosine similarity between sentence and line item.
-    Uses 'sentence-transformers/all-MiniLM-L6-v2' via fastembed or sentence-transformers,
-    with a graceful TF-IDF semantic cosine similarity fallback.
+    Computes dense embedding cosine similarity between sentence and line item
+    using 'sentence-transformers/all-MiniLM-L6-v2' via embed_helper.
     """
-    # 1. Try fastembed (ONNX runtime, ultra-fast and no PyTorch header dependencies)
-    try:
-        from fastembed import TextEmbedding
-        logger.info("Encoding text pairs using fastembed ('sentence-transformers/all-MiniLM-L6-v2')...")
-        embed_model = TextEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
-        sent_embs = np.array(list(embed_model.embed(sentences)))
-        line_embs = np.array(list(embed_model.embed(line_names)))
-        # Normalize
-        sent_norms = np.linalg.norm(sent_embs, axis=1, keepdims=True)
-        line_norms = np.linalg.norm(line_embs, axis=1, keepdims=True)
-        sent_normed = sent_embs / np.maximum(sent_norms, 1e-9)
-        line_normed = line_embs / np.maximum(line_norms, 1e-9)
-        cos_sims = np.sum(sent_normed * line_normed, axis=1)
-        raw_embs = np.hstack([sent_normed, line_normed])
-        return cos_sims, raw_embs
-    except Exception as e_fast:
-        logger.debug(f"fastembed not active ({e_fast}), trying sentence_transformers...")
-
-    # 2. Try sentence_transformers
-    try:
-        from sentence_transformers import SentenceTransformer
-        logger.info("Encoding text pairs with sentence-transformers ('all-MiniLM-L6-v2')...")
-        model = SentenceTransformer("all-MiniLM-L6-v2")
-        sent_emb = model.encode(sentences, show_progress_bar=False, normalize_embeddings=True)
-        line_emb = model.encode(line_names, show_progress_bar=False, normalize_embeddings=True)
-        cos_sims = np.sum(sent_emb * line_emb, axis=1)
-        raw_embs = np.hstack([sent_emb, line_emb])
-        return cos_sims, raw_embs
-    except Exception as e:
-        logger.warning(f"sentence-transformers unavailable ({e}), using TF-IDF semantic cosine similarity fallback...")
-        from sklearn.feature_extraction.text import TfidfVectorizer
-        from sklearn.metrics.pairwise import cosine_similarity
-        
-        vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words="english")
-        all_texts = sentences + line_names
-        vectorizer.fit(all_texts)
-        sent_mat = vectorizer.transform(sentences)
-        line_mat = vectorizer.transform(line_names)
-        
-        sims = []
-        for i in range(len(sentences)):
-            cs = cosine_similarity(sent_mat[i], line_mat[i])[0][0]
-            sims.append(cs)
-        
-        raw_embs = np.hstack([sent_mat.toarray()[:, :100], line_mat.toarray()[:, :100]])
-        return np.array(sims), raw_embs
+    return compute_batch_similarities(sentences, line_names)
 
 
 

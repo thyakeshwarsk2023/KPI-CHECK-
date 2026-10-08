@@ -4,20 +4,37 @@ src/app.py
 
 Interactive Demonstration Interface for Explainable Financial KPI Matching:
 1. User can choose curated test presets or provide custom narrative and line item inputs.
-2. Computes Block A hand-crafted and Block B embedding features dynamically.
+2. Computes Block A hand-crafted and real Block B MiniLM embedding features dynamically.
 3. Runs inference through the trained Logistic Regression classifier.
-4. Displays prediction label ('match', 'no_match', 'ambiguous') and class probabilities.
-5. Renders a live SHAP attribution plot explaining the decision.
+4. Displays prediction label ('match', 'no_match', 'ambiguous') and calibrated probabilities.
+5. Surfaces Auditor Workflow Recommendation Tiers (Auto-Verified, Flag for Review, Discrepancy).
+6. Renders a live SHAP attribution plot explaining the decision in real time.
 """
 
-import streamlit as st
+import sys
+from pathlib import Path
+import re
 import numpy as np
 import pandas as pd
 import joblib
-from pathlib import Path
 import matplotlib.pyplot as plt
 from rapidfuzz import fuzz
-import re
+import streamlit as st
+
+# Ensure repository root is in python path
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+from src.constants import (
+    ALL_FEATURES,
+    BLOCK_A_FEATURES,
+    BLOCK_B_FEATURES,
+    FINANCIAL_KEYWORDS,
+    SAVED_MODELS_DIR,
+    TRAIN_SPLIT_CSV
+)
+from src.features.embed_helper import get_embedder, compute_pair_similarity
 
 st.set_page_config(
     page_title="XAI KPI-Check Demo",
@@ -25,21 +42,7 @@ st.set_page_config(
     layout="wide"
 )
 
-SAVED_MODEL_PATH = Path("src/model/saved/logistic_regression_full.pkl")
-TRAIN_SPLIT_PATH = Path("data/processed/train_split.csv")
-
-BLOCK_A_FEATURES = [
-    "numeric_value_match", "numeric_value_close", "keyword_overlap",
-    "period_match", "string_similarity", "sentence_length", "line_item_name_length"
-]
-BLOCK_B_FEATURES = ["embedding_cosine_similarity"]
-ALL_FEATURES = BLOCK_A_FEATURES + BLOCK_B_FEATURES
-
-FINANCIAL_KEYWORDS = [
-    "revenue", "net income", "operating income", "gross profit", "cost of sales",
-    "margin", "ebitda", "assets", "liabilities", "cash", "debt", "earnings",
-    "diluted", "share", "sales", "operating expenses", "cash flow", "tax"
-]
+SAVED_MODEL_PATH = SAVED_MODELS_DIR / "logistic_regression_full.pkl"
 NUM_EXTRACT_RE = re.compile(r"[-+]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?")
 YEAR_PATTERN = re.compile(r"\b(20\d\d)\b")
 
@@ -85,11 +88,11 @@ PRESETS = {
 
 @st.cache_resource
 def load_model_and_explainer():
-    """Loads trained pipeline and cached background data for SHAP."""
+    """Loads trained pipeline, cached background data for SHAP, and real MiniLM embedder."""
     if not SAVED_MODEL_PATH.exists():
-        return None, None, None
+        return None, None, None, None
     pipeline = joblib.load(SAVED_MODEL_PATH)
-    train_df = pd.read_csv(TRAIN_SPLIT_PATH) if TRAIN_SPLIT_PATH.exists() else None
+    train_df = pd.read_csv(TRAIN_SPLIT_CSV) if TRAIN_SPLIT_CSV.exists() else None
     
     explainer = None
     try:
@@ -102,11 +105,15 @@ def load_model_and_explainer():
     except Exception as e:
         st.warning(f"SHAP explainer init note: {e}")
 
-    return pipeline, explainer, train_df
+    embedder = get_embedder()
+    return pipeline, explainer, train_df, embedder
 
 
-def extract_features_single(sentence: str, line_name: str, line_val: float):
-    """Computes feature vector for a single pair."""
+def extract_features_single(sentence: str, line_name: str, line_val: float, embedder=None):
+    """
+    Computes exact feature vector for a single pair using the real
+    MiniLM-L6 dense embedding model and Block A hand-crafted heuristics.
+    """
     raw_nums = NUM_EXTRACT_RE.findall(sentence)
     nums = []
     for n in raw_nums:
@@ -148,8 +155,8 @@ def extract_features_single(sentence: str, line_name: str, line_val: float):
     sent_len = len(sentence)
     line_len = len(line_name)
 
-    # Embedding / semantic similarity proxy
-    emb_sim = round(float(fuzz.token_set_ratio(sentence, line_name) / 100.0 * 0.4), 4)
+    # Real MiniLM dense embedding cosine similarity (replaces previous proxy)
+    emb_sim = round(compute_pair_similarity(sentence, line_name, embedder=embedder), 4)
 
     return pd.DataFrame([{
         "numeric_value_match": num_match,
@@ -167,15 +174,17 @@ def main():
     st.title("📊 XAI KPI-Check: Explainable Financial KPI Matching")
     st.markdown("""
     **Interpretability (SHAP & LIME) for Financial Statement Verification**  
-    Benchmarked against KPI-Check *(Hillebrand et al., IEEE BigData 2022)*.
+    Benchmarked against KPI-Check *(Hillebrand et al., IEEE BigData 2022)* | Feature-Aligned Inference Engine.
     """)
 
-    pipeline, explainer, _ = load_model_and_explainer()
+    pipeline, explainer, _, embedder = load_model_and_explainer()
 
     if pipeline is None:
         st.error("Trained model not found at `src/model/saved/logistic_regression_full.pkl`. Please run `python run_pipeline.py` first.")
         return
 
+    backend_name = embedder[0] if embedder else "local"
+    st.sidebar.markdown(f"**Embedding Model:** `all-MiniLM-L6-v2` ({backend_name})")
     st.sidebar.header("Select Evaluation Preset")
     preset_choice = st.sidebar.selectbox("Test Scenarios", list(PRESETS.keys()))
     preset_data = PRESETS[preset_choice]
@@ -200,9 +209,9 @@ def main():
     with col2:
         st.subheader("2. Prediction & Model Attribution")
         if predict_btn or sentence_input:
-            df_feats = extract_features_single(sentence_input, line_item_input, candidate_val_input)
+            df_feats = extract_features_single(sentence_input, line_item_input, candidate_val_input, embedder=embedder)
             classes = list(pipeline.classes_)
-            probs = pipeline.predict_proba(df_feats)[0]
+            probs = pipeline.predict_proba(df_feats[ALL_FEATURES])[0]
             pred_class = classes[np.argmax(probs)]
             pred_prob = np.max(probs)
 
@@ -218,6 +227,14 @@ def main():
                 unsafe_allow_html=True
             )
 
+            # Human-in-the-loop Auditor Decision Tier
+            if pred_class == "match" and pred_prob >= 0.70:
+                st.success("🟢 **Auditor Decision: AUTO-VERIFIED MATCH** — Numeric and semantic agreement validated for automated audit workpaper.")
+            elif pred_class == "ambiguous" or pred_prob < 0.70:
+                st.warning("🟡 **Auditor Decision: REFER TO HUMAN AUDITOR** — Borderline confidence / segment rollup flagged for CPA inspection.")
+            else:
+                st.error("🔴 **Auditor Decision: VERIFICATION DISCREPANCY** — Line item does not support narrative claim.")
+
             # Probabilities distribution
             p_df = pd.DataFrame({"Class": classes, "Probability": [f"{p*100:.1f}%" for p in probs]})
             st.dataframe(p_df.T, use_container_width=True)
@@ -225,7 +242,7 @@ def main():
             # SHAP attribution
             if explainer is not None:
                 scaler = pipeline.named_steps["scaler"]
-                X_scaled = scaler.transform(df_feats)
+                X_scaled = scaler.transform(df_feats[ALL_FEATURES])
                 target_idx = classes.index("match") if "match" in classes else 0
                 
                 shap_raw = explainer.shap_values(X_scaled)
@@ -236,7 +253,7 @@ def main():
                 else:
                     shap_target = shap_raw[0]
 
-                st.write("**Feature Attributions towards 'Match' (SHAP):**")
+                st.write("**Feature Attributions towards 'Match' (Exact LinearSHAP):**")
                 fig, ax = plt.subplots(figsize=(8, 4))
                 sorted_idx = np.argsort(shap_target)
                 y_pos = np.arange(len(ALL_FEATURES))
@@ -250,7 +267,7 @@ def main():
                 plt.tight_layout()
                 st.pyplot(fig)
             
-            with st.expander("Computed Feature Vector"):
+            with st.expander("Computed Feature Vector (Aligned Feature Space)"):
                 st.dataframe(df_feats)
 
 

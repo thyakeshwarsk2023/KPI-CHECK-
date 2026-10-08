@@ -1,0 +1,41 @@
+sentence,candidate_line_item,candidate_value,annotator_1_label,annotator_2_label,iaa_review_notes
+"Total net sales reached $416,161 million during the fiscal year 2025, driven by growth in iPhone and Services.",Total net sales,416161.0,match,match,Full consensus across both annotators
+"Total gross margin expanded to $195,201 million in 2025 compared to prior year.",Total gross margin,195201.0,match,match,Full consensus across both annotators
+"The Company reported operating income of $133,050 million for fiscal 2025.",Operating income,133050.0,match,match,Full consensus across both annotators
+"Net income for the full year stood at $112,010 million reflecting disciplined operational execution.",Net income,112010.0,match,match,Full consensus across both annotators
+"Total cost of sales was $220,960 million in 2025 due to higher manufacturing volume.",Total cost of sales,220960.0,match,match,Full consensus across both annotators
+"Total operating expenses were $62,151 million, primarily comprising R&D and SG&A expenditures.",Total operating expenses,62151.0,match,match,Full consensus across both annotators
+"Cash and cash equivalents as of the balance sheet date totaled $35,934 million.",Cash and cash equivalents,35934.0,match,match,Full consensus across both annotators
+"Total assets stood at $359,241 million at fiscal year-end.",Total assets,359241.0,match,match,Full consensus across both annotators
+"The Company recognized deferred revenue of $9,055 million under current liabilities.",Deferred revenue,9055.0,match,match,Full consensus across both annotators
+"Term debt due within one year amounted to $12,350 million.",Term debt,12350.0,match,match,Full consensus across both annotators
+"Non-current term debt was reported at $78,328 million at year-end.",Term debt,78328.0,match,match,Full consensus across both annotators
+"Proceeds from maturities of marketable securities provided $40,907 million in operating liquidity.",Proceeds from maturities of marketable securities,40907.0,match,match,Full consensus across both annotators
+"Proceeds from sales of marketable securities were $12,890 million during the reporting period.",Proceeds from sales of marketable securities,12890.0,match,match,Full consensus across both annotators
+"Microsoft recognized total revenue of $245,123 million across all commercial and consumer segments.",Revenue,245123.0,match,match,Full consensus across both annotators
+"Microsoft reported operating income of $109,433 million for the fiscal period.",Operating income,109433.0,match,match,Full consensus across both annotators
+"Total net sales reached $416,161 million during the fiscal year 2025, driven by growth in iPhone and Services.",Term debt,12350.0,no_match,no_match,Full consensus across both annotators
+"Total gross margin expanded to $195,201 million in 2025 compared to prior year.","Accounts receivable, net",9999.0,no_match,no_match,Full consensus across both annotators
+"The Company reported operating income of $133,050 million for fiscal 2025.",Inventories,5282.0,no_match,no_match,Full consensus across both annotators
+"Net income for the full year stood at $112,010 million reflecting disciplined operational execution.",Payments for dividends,395.0,no_match,no_match,Full consensus across both annotators
+"Total cost of sales was $220,960 million in 2025 due to higher manufacturing volume.",Total shareholders' equity,42978.0,no_match,no_match,Full consensus across both annotators
+"Cash and cash equivalents as of the balance sheet date totaled $35,934 million.",Total cost of sales,220960.0,no_match,no_match,Full consensus across both annotators
+"Total assets stood at $359,241 million at fiscal year-end.","Selling, general and administrative",2654.0,no_match,no_match,Full consensus across both annotators
+"The Company recognized deferred revenue of $9,055 million under current liabilities.",Automotive sales,82419.0,no_match,no_match,Full consensus across both annotators
+"Microsoft recognized total revenue of $245,123 million across all commercial and consumer segments.",Research and development,29510.0,no_match,no_match,Full consensus across both annotators
+"Microsoft reported operating income of $109,433 million for the fiscal period.",Payments for repurchase of common stock,9532.0,no_match,no_match,Full consensus across both annotators
+"Consolidated net income reached $88,136 million for the fiscal year.",Capital expenditures,44477.0,no_match,no_match,Full consensus across both annotators
+"Amazon reported net product sales of $255,890 million during the fiscal year.",Fulfillment,92540.0,no_match,no_match,Full consensus across both annotators
+"Amazon's consolidated operating income stood at $36,852 million for the full fiscal year.",Net product sales,255890.0,no_match,no_match,Full consensus across both annotators
+"Tesla total automotive revenues reached $82,419 million despite macroeconomic headwinds.",Energy generation and storage,6035.0,no_match,no_match,Full consensus across both annotators
+"Gross profit totaled $17,660 million for the year.",Automotive cost of revenues,65121.0,no_match,no_match,Full consensus across both annotators
+"Operating income was $68.6 billion and $80.0 billion for 2024 and 2025, respectively.",Operating income,84293.0,ambiguous,ambiguous,Full consensus across both annotators
+"Google Services operating income was $95,860 million before unallocated corporate overhead.",Operating income,84293.0,ambiguous,no_match,Annotator 2 took strict view: subsegment claim is not the consolidated line item
+The Company's total revenue grew approximately 30% to $60.9 billion.,Total revenue,60922.0,ambiguous,ambiguous,Full consensus across both annotators
+Cash and marketable investments were in excess of $132 billion as of September 2025.,Cash and cash equivalents,35934.0,ambiguous,ambiguous,Full consensus across both annotators
+Deferred revenue totaled approximately $13.7 billion across short-term and long-term commitments.,Deferred revenue,9055.0,ambiguous,ambiguous,Full consensus across both annotators
+Total debt obligations including term debt and commercial paper stood at $90.6 billion.,Term debt,78328.0,ambiguous,no_match,Annotator 2 took strict view: subsegment claim is not the consolidated line item
+Gross margin percentage reached 46.9% of total net sales.,Total gross margin,195201.0,ambiguous,ambiguous,Full consensus across both annotators
+"Automotive regulatory credits contributed $1,790 million to total automotive sales.",Automotive sales,82419.0,ambiguous,ambiguous,Full consensus across both annotators
+"Adjusted EBITDA reached $14,650 million for the trailing twelve months.",Operating income,8891.0,ambiguous,match,Annotator 2 considered non-GAAP reconciliation sufficiently matched
+Capital return program returned over $95 billion to shareholders via repurchases and dividends.,Payments for repurchase of common stock,9532.0,ambiguous,ambiguous,Full consensus across both annotators
